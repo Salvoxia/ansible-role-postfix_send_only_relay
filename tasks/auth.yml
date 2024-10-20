@@ -8,6 +8,7 @@
   notify: "Restart postfix"
   when: postfix_relayhost is defined
 
+
 - name: "Configure SASL authentication"
   when: postfix_sasl_username is defined and postfix_sasl_password is defined and postfix_relayhost is defined
   block:
@@ -95,3 +96,51 @@
         - "Restart saslauthd"
         - "Restart postfix"
       when: sasl_passwd_db.stat.exists
+
+
+- name: "Remove relayhost in main.cf"
+  ansible.builtin.lineinfile:
+    path: "{{ postfix_config_file }}"
+    regexp: "^relayhost"
+    state: absent
+  notify: "Restart postfix"
+  when: postfix_relayhost is not defined
+
+- name: "Remove SASL authentication"
+  when: postfix_sasl_username is not defined and postfix_sasl_password is not defined
+  block:
+    - name: "Remove SASL configuration from main.cf"
+      ansible.builtin.lineinfile:
+        path: "{{ postfix_config_file }}"
+        regexp: "{{ item }}"
+        state: absent
+      with_items:
+        - "^smtp_sasl_auth_enable"
+        - "^smtp_sasl_password_maps"
+      notify:
+        - "Restart postfix"
+        - "Restart saslauthd"
+
+    - name: "Check sasl_passwd file exists"
+      ansible.builtin.stat:
+        path: /etc/postfix/sasl_passwd
+      register: sasl_passwd
+
+    - name: "Remove SASL credentials in sasl_passwd"
+      ansible.builtin.lineinfile:
+        path: /etc/postfix/sasl_passwd
+        regexp: "^{{ postfix_relayhost }}"
+        state: absent
+      notify:
+        - "Run Postmap sasl_passwd"
+        - "Restart saslauthd"
+        - "Restart postfix"
+      register: sasl_credentials_removed
+
+    - name: "Run postmap sasl_passwd"
+      ansible.builtin.command: "postmap /etc/postfix/sasl_passwd"
+      notify:
+        - "Restart saslauthd"
+        - "Restart postfix"
+      changed_when: true
+      when: sasl_credentials_removed.changed

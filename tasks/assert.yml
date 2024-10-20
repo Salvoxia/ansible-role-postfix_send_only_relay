@@ -20,15 +20,9 @@
       - postfix_relayhost is string
     quiet: true
 
-- name: "Test if postfix_sasl_username is set correctly"
-  ansible.builtin.assert:
-    that:
-      - postfix_sasl_username is defined
-      - postfix_sasl_username is string
-    quiet: true
-
 - name: "Test if postfix_sasl_password is set correctly"
   ansible.builtin.assert:
     that:
       - postfix_sasl_password is defined
     quiet: true
+  when: postfix_sasl_username is defined and postfix_sasl_username is string
