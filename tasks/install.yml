@@ -9,46 +9,6 @@
     cache_valid_time: 3600
   when: ansible_pkg_mgr == "apt"
 
-- name: "Ensure postfix is installed (dnf)"
-  ansible.builtin.dnf:
-    name: postfix
-    state: present
-    update_cache: true
-  when: ansible_pkg_mgr == "dnf"
-
-- name: "Ensure postfix is installed (yum)"
-  ansible.builtin.yum:
-    name: postfix
-    state: present
-    update_cache: true
-  when: ansible_pkg_mgr == "yum"
-
-- name: "Ensure postfix is installed (zypper)"
-  community.general.zypper:
-    name: postfix
-    state: present
-    update_cache: true
-  notify: "Restart postfix"
-  when: ansible_pkg_mgr == "zypper"
-
-- name: "Ensure mailx is installed (Red Hat Family)"
-  ansible.builtin.package:
-    name: mailx
-    state: present
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version|int <= 8
-    - ansible_distribution_major_version|int == 2023
-
-- name: "Ensure s-nail is installed (Red Hat Family)"
-  ansible.builtin.package:
-    name: s-nail
-    state: present
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version|int >= 9
-    - ansible_distribution_major_version|int != 2023
-
 - name: "Ensure SASL packages are installed (apt)"
   ansible.builtin.apt:
     name:
@@ -58,30 +18,3 @@
     update_cache: true
     cache_valid_time: 3600
   when: ansible_pkg_mgr == "apt"
-
-- name: "Ensure SASL packages are installed (dnf)"
-  ansible.builtin.dnf:
-    name:
-      - cyrus-sasl
-      - cyrus-sasl-plain
-      - cyrus-sasl-lib
-    state: present
-    update_cache: true
-  when: ansible_pkg_mgr == "dnf"
-
-- name: "Ensure SASL packages are installed (yum)"
-  ansible.builtin.yum:
-    name:
-      - cyrus-sasl
-      - cyrus-sasl-plain
-      - cyrus-sasl-lib
-    state: present
-    update_cache: true
-  when: ansible_pkg_mgr == "yum"
-
-- name: "Ensure SASL packages are installed (zypper)"
-  community.general.zypper:
-    name: cyrus-sasl-saslauthd
-    state: present
-    update_cache: true
-  when: ansible_pkg_mgr == "zypper"
