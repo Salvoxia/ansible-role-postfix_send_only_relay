@@ -3,15 +3,23 @@
 An [Ansible](https://www.ansible.com) role to install [Postfix](https://www.postfix.org) and configure as send-only via an SMTP relay.
 
 <p align="center">
-<a href="https://app.codacy.com/gh/dgibbs64/ansible-role-postfix_send_only_relay"><img src="https://img.shields.io/codacy/grade/1a892d499efd4dabb73beffa8d64ed01?logo=codacy&style=flat-square" alt="Codacy grade"></a>
-<a href="https://github.com/dgibbs64/ansible-role-postfix_send_only_relay/actions/workflows/molecule.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/dgibbs64/ansible-role-postfix_send_only_relay/molecule.yml?label=molecule&logo=ansible&style=flat-square"></a>
-<a href="https://galaxy.ansible.com/dgibbs64/postfix_send_only_relay"><img alt="GitHub tag (latest by date)" src="https://img.shields.io/github/v/tag/dgibbs64/ansible-role-postfix_send_only_relay?color=EE0000&label=release&logo=ansible&style=flat-square"></a>
-<a href="https://github.com/dgibbs64/ansible-role-postfix_send_only_relay/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/gameservermanagers/docker-steamcmd?style=flat-square" alt="MIT License"></a>
+<a href="https://github.com/salvoxia/ansible-role-postfix_send_only_relay/actions/workflows/molecule.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/salvoxia/ansible-role-postfix_send_only_relay/molecule.yml?label=molecule&logo=ansible&style=flat-square"></a>
+<a href="https://galaxy.ansible.com/salvoxia/postfix_send_only_relay"><img alt="GitHub tag (latest by date)" src="https://img.shields.io/github/v/tag/salvoxia/ansible-role-postfix_send_only_relay?color=EE0000&label=release&logo=ansible&style=flat-square"></a>
+<a href="https://github.com/salvoxia/ansible-role-postfix_send_only_relay/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/gameservermanagers/docker-steamcmd?style=flat-square" alt="MIT License"></a>
 </p>
 
 ## About
 
 This role is designed to be used on a server that will only send emails and not receive them. This is useful for recieving emails from cron jobs or other services/applications that want to send emails from a server.
+
+## Disclaimer
+
+This role is based on [dgibbs64/ansible-role-postfix_send_only_relay](https://github.com/dgibbs64/ansible-role-postfix_send_only_relay) and includes the following changes:
+  - Adds a fix for escaping `postfix_relayhost` regular expression characters
+  - Adds a fix for modifying `postfix_mailutils_config_file` file
+  - Adds `postfix_state` variable with values `present` or `absent`; when using `absent`, Postfix is uninstalled via package manager, `postfix_config_file` is removed and any changes to `postfix_mailutils_config_file` are reverted
+  - Adds `postfix_additional_main_config` to set arbitrary values in `postfix_config_file` for more flexibility in postfix configuration
+
 
 ## Requirements
 
@@ -26,22 +34,24 @@ Your email provider may offer a SMTP relay service. If not, there are several po
 
 ### Supported Distros
 
-- AlmaLinux >= 8
-- AmazonLinux 2023
-- CentOS >= 7
-- Debian >= 10
-- Fedora >= 37
-- openSUSE >= 15.4
-- OracleLinux >= 8
-- Pop!\_OS >= 18.04
-- Redhat Enterprise Linux >= 8
-- Rocky Linux >= 8
-- Ubuntu >= 18.04
+- Debian >= 11
+- Ubuntu >= 22.04
 
 ## Role Variables
 
 ```yaml
 ---
+---
+# defaults file for postfix_send_only_relay
+
+# Flag indicating whether to install or remove postfix
+postfix_state: "present"
+
+# Additional generic settings to apply to postfix main.cf file
+postfix_additional_main_config: {}
+#  Example:
+#  smtpd_client_restrictions: "permit_mynetworks, reject"
+
 # Config path for postfix
 postfix_config_file: "/etc/postfix/main.cf"
 
@@ -78,6 +88,9 @@ postfix_root_alias:
 
 # Email address to recieve test email when role is run.
 postfix_test_send_email:
+
+# The email address that will be used to send test emails.
+postfix_mailutils_config_file: "/etc/mailutils.conf"
 ```
 
 ## Dependencies
@@ -99,7 +112,7 @@ community.general
     postfix_sasl_password: "password"
     postfix_root_alias: "foobar@outlook.com"
   roles:
-    - role: "dgibbs64.postfix_send_only_relay"
+    - role: "salvoxia.postfix_send_only_relay"
 ```
 
 ## License
@@ -109,3 +122,4 @@ MIT
 ## Author Information
 
 - [Daniel Gibbs](https://danielgibbs.co.uk)
+- This fork is maintained by [Salvoxia](https://github.com/Salvoxia)
