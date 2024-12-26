@@ -137,11 +137,3 @@
         - "Restart saslauthd"
         - "Restart postfix"
       register: sasl_credentials_removed
-
-    - name: "Run postmap sasl_passwd"
-      ansible.builtin.command: "postmap /etc/postfix/sasl_passwd"
-      notify:
-        - "Restart saslauthd"
-        - "Restart postfix"
-      changed_when: true
-      when: sasl_credentials_removed.changed
