@@ -14,11 +14,11 @@ This role is designed to be used on a server that will only send emails and not 
 
 ## Disclaimer
 
-This role is based on [dgibbs64/ansible-role-postfix_send_only_relay](https://github.com/dgibbs64/ansible-role-postfix_send_only_relay) and includes the following changes:
-  - Adds a fix for escaping `postfix_relayhost` regular expression characters
-  - Adds a fix for modifying `postfix_mailutils_config_file` file
-  - Adds `postfix_state` variable with values `present` or `absent`; when using `absent`, Postfix is uninstalled via package manager, `postfix_config_file` is removed and any changes to `postfix_mailutils_config_file` are reverted
-  - Adds `postfix_additional_main_config` to set arbitrary values in `postfix_config_file` for more flexibility in postfix configuration
+This role is based on [dgibbs64/ansible-role-postfix_send_only_relay](https://github.com/dgibbs64/ansible-role-postfix_send_only_relay) and includes the following changes:  
+- Adds a fix for escaping `postfix_relayhost` regular expression characters
+- Adds a fix for modifying `postfix_mailutils_config_file` file
+- Adds `postfix_state` variable with values `present` or `absent`; when using `absent`, Postfix is uninstalled via package manager, `postfix_config_file` is removed and any changes to `postfix_mailutils_config_file` are reverted
+- Adds `postfix_additional_main_config` to set arbitrary values in `postfix_config_file` for more flexibility in postfix configuration
 
 
 ## Requirements
