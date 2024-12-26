@@ -52,7 +52,7 @@
 - name: "Set additional variables in main.cf"
   ansible.builtin.lineinfile:
     path: "{{ postfix_config_file }}"
-    regexp: "^{{ item.key }}"
+    regexp: "^{{ item.key }}(\\s)*="
     line: "{{ item.key }} = {{ item.value }}"
     state: present
   notify:
