@@ -10,8 +10,9 @@
   run_once: true
   delegate_to: localhost
 
-- name: "Become block"
+- name: "Become block for Installation"
   become: true
+  when: postfix_state == 'present'
   block:
     - name: "Install"
       ansible.builtin.include_tasks: install.yml
@@ -37,3 +38,10 @@
         name: postfix
         enabled: true
         state: started
+
+- name: "Become block for Uninstallation"
+  become: true
+  when: postfix_state == 'absent'
+  block:
+    - name: "Uninstall"
+      ansible.builtin.include_tasks: uninstall.yml

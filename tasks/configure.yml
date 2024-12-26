@@ -49,6 +49,17 @@
     - "Restart postfix"
   when: postfix_inet_interfaces is defined
 
+- name: "Set additional variables in main.cf"
+  ansible.builtin.lineinfile:
+    path: "{{ postfix_config_file }}"
+    regexp: "^{{ item.key }}"
+    line: "{{ item.key }} = {{ item.value }}"
+    state: present
+  notify:
+    - "Restart postfix"
+  when: postfix_additional_main_config is defined
+  loop: "{{ postfix_additional_main_config | dict2items }}"
+
 - name: "Set root alias in aliases"
   ansible.builtin.lineinfile:
     path: /etc/aliases
@@ -60,13 +71,13 @@
 
 - name: "Check if mailutils.conf exists"
   ansible.builtin.stat:
-    path: postfix_mailutils_config_file
+    path: "{{ postfix_mailutils_config_file }}"
   register: mailutils_conf
 
 - name: "Apply mailutils.conf template"
   ansible.builtin.template:
     src: mailutils.conf
-    dest: postfix_mailutils_config_file
+    dest: "{{ postfix_mailutils_config_file }}"
     owner: root
     group: root
     mode: "0644"
@@ -75,7 +86,7 @@
 
 - name: "Set email-domain in mailutils.conf"
   ansible.builtin.lineinfile:
-    path: postfix_mailutils_config_file
+    path: "{{ postfix_mailutils_config_file }}"
     regexp: "(\\s*)email-domain"
     line: "   email-domain {{ postfix_mail_send_domain }};"
     state: present

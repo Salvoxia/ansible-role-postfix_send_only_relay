@@ -1,6 +1,13 @@
 ---
 # defaults file for postfix_send_only_relay
 
+# Flag indicating whether to install or remove postfix
+postfix_state: "present"
+
+# Additional generic settings to apply to postfix main.cf file
+postfix_additional_main_config: {}
+#  smtpd_client_restrictions: "permit_mynetworks, reject"
+
 # Config path for postfix
 postfix_config_file: "/etc/postfix/main.cf"
 

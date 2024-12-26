@@ -1,0 +1,113 @@
+---
+- name: "Ensure postfix is removed (apt)"
+  ansible.builtin.apt:
+    name:
+      - postfix
+      - mailutils
+    state: absent
+    update_cache: true
+    cache_valid_time: 3600
+  when: ansible_pkg_mgr == "apt"
+
+- name: "Ensure postfix is removed (dnf)"
+  ansible.builtin.dnf:
+    name: postfix
+    state: absent
+    update_cache: true
+  when: ansible_pkg_mgr == "dnf"
+
+- name: "Ensure postfix is removed (yum)"
+  ansible.builtin.yum:
+    name: postfix
+    state: absent
+    update_cache: true
+  when: ansible_pkg_mgr == "yum"
+
+- name: "Ensure postfix is removed (zypper)"
+  community.general.zypper:
+    name: postfix
+    state: absent
+    update_cache: true
+  notify: "Restart postfix"
+  when: ansible_pkg_mgr == "zypper"
+
+- name: "Ensure mailx is removed (Red Hat Family)"
+  ansible.builtin.package:
+    name: mailx
+    state: absent
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version|int <= 8
+    - ansible_distribution_major_version|int == 2023
+
+- name: "Ensure s-nail is removed (Red Hat Family)"
+  ansible.builtin.package:
+    name: s-nail
+    state: absent
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version|int >= 9
+    - ansible_distribution_major_version|int != 2023
+
+- name: "Ensure SASL packages are removed (apt)"
+  ansible.builtin.apt:
+    name:
+      - sasl2-bin
+      - libsasl2-modules
+    state: absent
+    update_cache: true
+    cache_valid_time: 3600
+  when: ansible_pkg_mgr == "apt"
+
+- name: "Ensure SASL packages are removed (dnf)"
+  ansible.builtin.dnf:
+    name:
+      - cyrus-sasl
+      - cyrus-sasl-plain
+      - cyrus-sasl-lib
+    state: absent
+    update_cache: true
+  when: ansible_pkg_mgr == "dnf"
+
+- name: "Ensure SASL packages are removed (yum)"
+  ansible.builtin.yum:
+    name:
+      - cyrus-sasl
+      - cyrus-sasl-plain
+      - cyrus-sasl-lib
+    state: absent
+    update_cache: true
+  when: ansible_pkg_mgr == "yum"
+
+- name: "Ensure SASL packages are removed (zypper)"
+  community.general.zypper:
+    name: cyrus-sasl-saslauthd
+    state: absent
+    update_cache: true
+  when: ansible_pkg_mgr == "zypper"
+
+- name: "Remove postfix main.cf"
+  ansible.builtin.file:
+    path: "{{ postfix_config_file }}"
+    state: absent
+
+- name: "Check if mailutils.conf exists"
+  ansible.builtin.stat:
+    path: "{{ postfix_mailutils_config_file }}"
+  register: mailutils_conf
+
+- name: "Get expected mailutils.conf contents"
+  ansible.builtin.set_fact:
+    rendered_template: "{{ lookup('template', './mailutils.conf') }}"
+
+- name: "Get mailutils.conf contents"
+  ansible.builtin.command: "cat {{ postfix_mailutils_config_file }}"
+  register: mailtutils_contents
+  changed_when: false
+  when: mailutils_conf.stat.exists
+
+- name: "Remove empty mailutils.conf"
+  ansible.builtin.file:
+    path: "{{ postfix_mailutils_config_file }}"
+    state: absent
+  when: mailutils_conf.stat.exists and mailtutils_contents.stdout | trim == rendered_template | trim
