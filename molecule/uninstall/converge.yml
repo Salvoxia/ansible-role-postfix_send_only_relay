@@ -1,0 +1,9 @@
+---
+- name: "Converge"
+  hosts: all
+  gather_facts: false
+  vars:
+    postfix_state: "absent"
+    postfix_mail_send_domain: "example.com"
+  roles:
+    - role: "salvoxia.postfix_send_only_relay"

@@ -1,0 +1,46 @@
+---
+- name: "Verify"
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: "Check postfix binary presence"
+      become: true
+      ansible.builtin.command: "which postfix"
+      failed_when: postfix_install_check_result.rc not in [0, 1]
+      register: postfix_install_check_result
+      changed_when: false
+
+    - name: "Evaluating check result"
+      ansible.builtin.assert:
+        that: "postfix_install_check_result.rc == 1"
+        fail_msg: "Postfix is still installed"
+
+    - name: "Get service facts"
+      ansible.builtin.service_facts:
+
+    - name: "Check postfix service is not present"
+      ansible.builtin.fail:
+        msg: "Postfix service is still present"
+      when: "'postfix' in services and services['postfix']['state'] != 'stopped'"
+
+    - name: "Check if Postfix configuration exists"
+      ansible.builtin.stat:
+        path: /etc/postfix/main.cf
+      register: register_name
+
+    - name: "Verify Postfix configuration does not exist"
+      ansible.builtin.assert:
+        that:
+          - register_name.stat.exists is false
+        fail_msg: "Postfix configuration still exists"
+
+    - name: "Check if mailutils configuration exists"
+      ansible.builtin.stat:
+        path: "/etc/mailutils.conf"
+      register: register_name
+
+    - name: "Verify mailutils configuration does not exist"
+      ansible.builtin.assert:
+        that:
+          - register_name.stat.exists is false
+        fail_msg: "Mailutils configuration still exists"

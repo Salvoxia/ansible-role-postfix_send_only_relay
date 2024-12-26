@@ -1,5 +1,5 @@
 ---
-- name: "Converge"
+- name: "Prepare"
   hosts: all
   gather_facts: false
   vars:
@@ -8,5 +8,6 @@
     postfix_sasl_username: "username"
     postfix_sasl_password: "password"
     postfix_root_alias: "foobar@outlook.com"
+    postfix_mail_send_domain: "example.com"
   roles:
     - role: "salvoxia.postfix_send_only_relay"
