@@ -1,11 +1,11 @@
 ---
 galaxy_info:
-  author: Daniel Gibbs
+  author: Salvoxia
   company: none
-  description: An Ansible role to install Postfix and configure as send-only via an SMTP relay.
+  description: An Ansible role to install Postfix and configure as send-only via an SMTP relay, based on postfix_send_only_relay by Daniel Gibbs.
   license: MIT
   min_ansible_version: "2.13"
-  namespace: dgibbs64
+  namespace: salvoxia
   role_name: postfix_send_only_relay
 
   platforms:
