@@ -1,13 +1,11 @@
 ---
 galaxy_info:
-  author: Salvoxia
-  company: none
+  author: slvoxia
+  role_name: postfix_send_only_relay
   description: An Ansible role to install Postfix and configure as send-only via an SMTP relay, based on postfix_send_only_relay by Daniel Gibbs.
+  issue_tracker_url: https://github.com/salvoxia/ansible-role-postfix_send_only_relay/issues
   license: MIT
   min_ansible_version: "2.13"
-  namespace: salvoxia
-  role_name: postfix_send_only_relay
-
   platforms:
     - name: Ubuntu
       versions:
