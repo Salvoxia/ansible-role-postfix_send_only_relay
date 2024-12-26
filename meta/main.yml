@@ -11,24 +11,11 @@ galaxy_info:
   platforms:
     - name: Ubuntu
       versions:
-        - all
+        - jammy
     - name: Debian
       versions:
-        - all
-    - name: Fedora
-      versions:
-        - all
-    - name: Amazon
-      versions:
-        - all
-    - name: EL
-      versions:
-        - "7"
-        - "8"
-        - "9"
-    - name: opensuse
-      versions:
-        - all
+        - bullseye
+        - bookworm
   galaxy_tags:
     - posfix
     - smtp
