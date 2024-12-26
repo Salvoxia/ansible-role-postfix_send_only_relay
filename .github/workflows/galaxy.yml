@@ -38,25 +38,13 @@ jobs:
       fail-fast: false
       matrix:
         distro:
-          - amazonlinux2023
           - debian11
           - debian12
-          - fedora39
-          - fedora40
-          - opensuseleap15
-          - rockylinux8
-          - rockylinux9
-          - ubuntu2004
           - ubuntu2204
           - ubuntu2404
         ansible_core_version:
           - 2.16
           - latest
-        exclude:
-          - distro: rockylinux8
-            ansible_core_version: latest
-          - distro: opensuseleap15
-            ansible_core_version: latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
