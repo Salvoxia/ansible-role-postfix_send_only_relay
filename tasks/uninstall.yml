@@ -1,4 +1,15 @@
 ---
+- name: "Get service facts"
+  ansible.builtin.service_facts:
+
+- name: "Stop postfix"
+  become: true
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: stopped
+  when: item in services and (services[item]['status'] is not defined or services[item]['status'] != 'not-found')
+  with_items: ['postfix', 'postfix.service']
+
 - name: "Ensure postfix is removed (apt)"
   ansible.builtin.apt:
     name:
