@@ -7,7 +7,7 @@ on:
       - "main"
       - "master"
   schedule:
-    - cron: "16 0 * * 0"
+    - cron: "40 0 * * 1"
 
 concurrency:
   group: ${{ github.ref_name }}
