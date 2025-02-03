@@ -51,11 +51,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install test dependencies (specific version)
-        run: pip3 install ansible-core==${{ matrix.ansible_core_version }} molecule-plugins[docker] jmespath
+        # ansible-compat==24.10.0 is a temporary workaround for a bug in ansible-compat 25.0/25.1
+        run: pip3 install ansible-core==${{ matrix.ansible_core_version }} molecule-plugins[docker] jmespath ansible-compat==24.10.0
         if: matrix.ansible_core_version != 'latest'
 
       - name: Install test dependencies (latest version)
-        run: pip3 install ansible-core molecule-plugins[docker] jmespath
+        # ansible-compat==24.10.0 is a temporary workaround for a bug in ansible-compat 25.0/25.1
+        run: pip3 install ansible-core molecule-plugins[docker] jmespath ansible-compat==24.10.0
         if: matrix.ansible_core_version == 'latest'
 
       - name: Secrets to env
