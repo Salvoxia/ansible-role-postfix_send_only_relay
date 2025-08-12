@@ -32,8 +32,8 @@
     - name: "Send Email"
       ansible.builtin.include_tasks: send_email.yml
       when:
-         - postfix_test_send_email is defined
-         - postfix_test_send_email | bool
+        - postfix_test_send_email is defined
+        - postfix_test_send_email | bool
 
     - name: "Ensure postfix is started and enabled on boot"
       ansible.builtin.service:

@@ -10,7 +10,7 @@
 
 
 - name: "Configure SASL authentication"
-  when: 
+  when:
     - postfix_sasl_username is defined
     - postfix_sasl_username | length > 0
     - postfix_sasl_password is defined
