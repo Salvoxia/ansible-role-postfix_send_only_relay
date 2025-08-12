@@ -10,8 +10,13 @@
 
 
 - name: "Configure SASL authentication"
-  when: postfix_sasl_username is defined and postfix_sasl_username and postfix_sasl_password is defined
-        and postfix_sasl_password and postfix_relayhost is defined and postfix_relayhost
+  when: 
+    - postfix_sasl_username is defined
+    - postfix_sasl_username | length > 0
+    - postfix_sasl_password is defined
+    - postfix_sasl_password | length > 0
+    - postfix_relayhost is defined
+    - postfix_relayhost | length > 0
   block:
     - name: "Set SASL configuration to main.cf"
       ansible.builtin.lineinfile:
