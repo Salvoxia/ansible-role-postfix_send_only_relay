@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install test dependencies (specific version)
-        run: pip3 install ansible==${{ matrix.ansible_core_version }} molecule molecule-plugins[docker] jmespath ansible-compat
+        run: pip3 install ansible-core==${{ matrix.ansible_core_version }} molecule molecule-plugins[docker] jmespath ansible-compat
         if: matrix.ansible_core_version != 'latest'
 
       - name: Install test dependencies (latest version)
