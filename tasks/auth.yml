@@ -113,7 +113,7 @@
   when: postfix_relayhost is not defined
 
 - name: "Remove SASL authentication"
-  when: ( postfix_sasl_username is not defined or postfix_sasl_username | length == 0 ) and ( postfix_sasl_password is not defined or postfix_sasl_password | length == 0)
+  when: ( postfix_sasl_username is not defined or postfix_sasl_username | string | length == 0 ) and ( postfix_sasl_password is not defined or postfix_sasl_password | string | length == 0)
   block:
     - name: "Remove SASL configuration from main.cf"
       ansible.builtin.lineinfile:
